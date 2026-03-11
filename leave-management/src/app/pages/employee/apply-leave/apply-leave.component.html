@@ -1,0 +1,92 @@
+<div class="max-w-2xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-slate-800">Apply for Leave</h1>
+        <p class="text-slate-500">Please fill in the details below to submit your leave request.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <form [formGroup]="applyForm" (ngSubmit)="onSubmit()" class="p-8 space-y-6">
+
+            <!-- Leave Type -->
+            <div>
+                <label for="leaveTypeId" class="block text-sm font-medium text-slate-700 mb-2">Leave Type</label>
+                <select id="leaveTypeId" formControlName="leaveTypeId"
+                    class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
+                    <option *ngFor="let type of leaveTypes" [value]="type.id">{{ type.name }}</option>
+                </select>
+                <p *ngIf="applyForm.get('leaveTypeId')?.touched && applyForm.get('leaveTypeId')?.errors?.['required']"
+                    class="mt-1 text-xs text-red-500">Leave type is required</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Start Date -->
+                <div>
+                    <label for="startDate" class="block text-sm font-medium text-slate-700 mb-2">Start Date</label>
+                    <input type="date" id="startDate" formControlName="startDate"
+                        class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
+                    <p *ngIf="applyForm.get('startDate')?.touched && applyForm.get('startDate')?.errors?.['required']"
+                        class="mt-1 text-xs text-red-500">Start date is required</p>
+                </div>
+
+                <!-- End Date -->
+                <div>
+                    <label for="endDate" class="block text-sm font-medium text-slate-700 mb-2">End Date</label>
+                    <input type="date" id="endDate" formControlName="endDate"
+                        class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
+                    <p *ngIf="applyForm.get('endDate')?.touched && applyForm.get('endDate')?.errors?.['required']"
+                        class="mt-1 text-xs text-red-500">End date is required</p>
+                </div>
+            </div>
+
+            <p *ngIf="applyForm.errors?.['dateRange']" class="text-sm text-red-500 mt-[-1rem]">"End Date" cannot be
+                earlier than "Start Date"</p>
+
+            <!-- Reason -->
+            <div>
+                <label for="reason" class="block text-sm font-medium text-slate-700 mb-2">Reason</label>
+                <textarea id="reason" formControlName="reason" rows="4"
+                    placeholder="Please explain the reason for your leave..."
+                    class="block w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all resize-none"></textarea>
+                <div class="flex justify-between mt-1">
+                    <p *ngIf="applyForm.get('reason')?.touched && (applyForm.get('reason')?.errors?.['required'] || applyForm.get('reason')?.errors?.['minlength'])"
+                        class="text-xs text-red-500">
+                        Please provide a valid reason (min 10 chars)
+                    </p>
+                    <p class="text-xs text-slate-400 ml-auto">{{applyForm.get('reason')?.value?.length || 0}} characters
+                    </p>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div *ngIf="errorMessage"
+                class="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ errorMessage }}
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-4 pt-4">
+                <button type="button" routerLink="/employee/dashboard"
+                    class="flex-1 py-3 px-4 border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-all">
+                    Cancel
+                </button>
+                <button type="submit" [disabled]="loading || applyForm.invalid"
+                    class="flex-[2] py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all shadow-md shadow-primary-200 flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed">
+                    <svg *ngIf="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    {{ loading ? 'Submitting...' : 'Submit Application' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

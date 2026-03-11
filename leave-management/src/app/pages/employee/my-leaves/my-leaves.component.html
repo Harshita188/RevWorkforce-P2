@@ -1,0 +1,63 @@
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">My Leave Applications</h1>
+            <p class="text-slate-500 text-sm">Review your history of leave requests.</p>
+        </div>
+        <button routerLink="/employee/apply-leave"
+            class="px-4 py-2.5 bg-primary-600 text-white font-semibold rounded-xl shadow-md">
+            New Request
+        </button>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4 font-semibold">Status</th>
+                        <th class="px-6 py-4 font-semibold">Leave Type</th>
+                        <th class="px-6 py-4 font-semibold">Duration</th>
+                        <th class="px-6 py-4 font-semibold">Reason</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @for (leave of leaves; track leave.id) {
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <span [class.bg-green-100]="leave.status === 'APPROVED'"
+                                [class.text-green-700]="leave.status === 'APPROVED'"
+                                [class.bg-yellow-100]="leave.status === 'PENDING'"
+                                [class.text-yellow-700]="leave.status === 'PENDING'"
+                                [class.bg-red-100]="leave.status === 'REJECTED'"
+                                [class.text-red-700]="leave.status === 'REJECTED'"
+                                class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider inline-flex items-center">
+                                {{leave.status}}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-700">{{leave.leaveType}}</td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-medium text-slate-700">{{leave.startDate | date:'mediumDate'}} -
+                                {{leave.endDate | date:'mediumDate'}}</div>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-slate-600 max-w-xs truncate">{{leave.reason}}</td>
+                        </tr>
+                    } @empty {
+                    @if (!loading) {
+                    <tr>
+                        <td colspan="4" class="px-6 py-20 text-center">
+                            <p class="text-slate-400">No records found.</p>
+                        </td>
+                    </tr>
+                    }
+                    }
+                    @if (loading) {
+                    <tr>
+                        <td colspan="4" class="px-6 py-12 text-center text-slate-400 animate-pulse">Loading...</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
